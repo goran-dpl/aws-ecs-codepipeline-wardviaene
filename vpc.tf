@@ -13,6 +13,6 @@ module "vpc" {
   enable_vpn_gateway = false
 
   tags = {
-    "Name" = "demo-terraform-cloudpipeline"
+    "Name" = "demo-terraform-codepipeline"
   }
 }
