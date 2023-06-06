@@ -27,13 +27,12 @@ ssh-keygen -f mykey
 
 ## Get the current user and upload the ssh public key
 ```bash
-cat mykey.pub
 USER_ARN=$(aws sts get-caller-identity | jq '.Arn') 
 USER_NAME=$(jq --raw-output 'match("(.*user?)\/(.*$)").captures[1].string' <<< $USER_ARN)
 SSH_KEY_ID=$(aws iam upload-ssh-public-key --user-name $USER_NAME --ssh-public-key-body file://mykey.pub | jq --raw-output '.SSHPublicKey.SSHPublicKeyId')
 ```
 
-## List all public keys
+#### List all public keys
 ```bash
 aws iam list-ssh-public-keys --user-name $USER_NAME | jq --raw-output '.SSHPublicKeys[].SSHPublicKeyId'
 ```
@@ -46,7 +45,7 @@ git remote add origin ssh://$SSH_KEY_ID@git-codecommit.eu-west-2.amazonaws.com/v
 ssh-add mykey
 ```
 
-###### Push the app code and trigger the pipeline
+## Push the app code and trigger the pipeline
 ```bash
 cd docker-demo
 git add .
