@@ -1,10 +1,10 @@
 # AWS CodePipeline
 Using AWS CodeCommit and AWS CodeBuild to build a NodeJS docker image with the application code bundled \
-and CodeDeploy to deploy on ECS Fargate.
+and AWS CodeDeploy to deploy on Amazon ECS Fargate.
 ## Initiate terraform and create resources
 ```bash
 terraform init
-terraform plan/apply
+terraform apply
 ```
 
 ## Clone the sample application
@@ -14,9 +14,8 @@ git clone https://github.com/goran-dpl/docker-demo.git
 
 ## Copy the configuraion files to the app directory
 ```bash
-cd docker-demo
-cp ../app/config/* .
-cp ../app/scripts/create-new-task-def.sh .
+cp app/config/* docker-demo/
+cp app/scripts/create-new-task-def.sh docker-demo/
 ```
 
 ## Create and upload SSH public key to your IAM user
@@ -27,7 +26,7 @@ ssh-keygen -f mykey
 
 ## Get the current user and upload the ssh public key
 ```bash
-USER_ARN=$(aws sts get-caller-identity | jq '.Arn') 
+USER_ARN=$(aws sts get-caller-identity | jq '.Arn')
 USER_NAME=$(jq --raw-output 'match("(.*user?)\/(.*$)").captures[1].string' <<< $USER_ARN)
 SSH_KEY_ID=$(aws iam upload-ssh-public-key --user-name $USER_NAME --ssh-public-key-body file://mykey.pub | jq --raw-output '.SSHPublicKey.SSHPublicKeyId')
 ```
